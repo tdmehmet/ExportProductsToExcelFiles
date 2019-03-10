@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SuppliersToBiggBrands": {
+      "commandName": "Project",
+      "commandLineArgs": ".\\bin\\Debug\\netcoreapp2.1\\Properties\\"
+    }
+  }
+}
