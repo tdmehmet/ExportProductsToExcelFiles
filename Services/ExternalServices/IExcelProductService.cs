@@ -10,5 +10,6 @@ namespace ExportProductsToExcelFiles.Services.ExternalServices
     public interface IExcelProductService
     {
         List<ExcelProduct> FindAllProductsFromExcelFile(FileInfo fileInfo);
+        void GenerateExcelSheetfromExcelProductsByBrand(List<ExcelProduct> excelProducts, string brand);
     }
 }

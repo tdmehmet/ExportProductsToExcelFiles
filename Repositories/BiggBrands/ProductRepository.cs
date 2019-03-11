@@ -38,6 +38,7 @@ namespace ExportProductsToExcelFiles.Repositories.BiggBrands
                 .Include(p => p.ProductCategoryMapping)
                 .ThenInclude(p => p.Category)
                 //.Include(p => p.ProductCategoryMapping.Select(pcm => pcm.Category))
+                .Include(p=> p.ProductSpecificationAttributeMapping)
                 .ToList();
         }
 

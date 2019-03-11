@@ -6,6 +6,10 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using System.Data;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using ExportProductsToExcelFiles.AppModels;
 
 namespace ExportProductsToExcelFiles.Utils
 {
@@ -49,37 +53,99 @@ namespace ExportProductsToExcelFiles.Utils
         public static void CreateSheetIfNotExists(string brand)
         {
             SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(GenerateExcelFileName(), true);
-            bool sheetExists = false;
-            if(spreadsheetDocument.WorkbookPart.Workbook.Sheets != null) { 
-                foreach(Sheet sheet in spreadsheetDocument.WorkbookPart.Workbook.Sheets)
+            if(spreadsheetDocument.WorkbookPart.Workbook.Sheets == null ) {
+                 Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.
+                        AppendChild<Sheets>(new Sheets());
+                if(spreadsheetDocument.WorkbookPart.Workbook.Descendants<Sheet>().Where(s => s.Name == brand).FirstOrDefault() == null)
                 {
-                    if(sheet.Name == brand)
+                   
+
+                    // Append a new worksheet and associate it with the workbook.
+                    Sheet sheet = new Sheet()
                     {
-                        sheetExists = true;
-                        break;
-                    }
+                        Id = spreadsheetDocument.WorkbookPart.
+                        GetIdOfPart(spreadsheetDocument.WorkbookPart.WorksheetParts.FirstOrDefault()),
+                        SheetId = 1,
+                        Name = brand
+                    };
+                    sheets.Append(sheet);
+
+                    spreadsheetDocument.WorkbookPart.Workbook.Save();
+
                 }
             }
-            if (!sheetExists)
+            spreadsheetDocument.Close();
+        }
+
+        public static void CreateSheetColumns(string brand)
+        {
+            SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(GenerateExcelFileName(), true);
+            Sheet brandSheet = spreadsheetDocument.WorkbookPart.Workbook.Descendants<Sheet>().Single(s => s.Name == brand);
+            
+            if (brandSheet != null)
             {
-                Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.
-                   AppendChild<Sheets>(new Sheets());
+                Worksheet brandWorkSheet = ((WorksheetPart)spreadsheetDocument.WorkbookPart.GetPartById(brandSheet.Id)).Worksheet;
 
-                // Append a new worksheet and associate it with the workbook.
-                Sheet sheet = new Sheet()
+                Columns brandSheetColumns = brandWorkSheet.Elements<Columns>().FirstOrDefault();
+
+                if ((brandSheetColumns == null))
                 {
-                    Id = spreadsheetDocument.WorkbookPart.
-                    GetIdOfPart(spreadsheetDocument.WorkbookPart.WorksheetParts.FirstOrDefault()),
-                    SheetId = 1,
-                    Name = brand
-                };
-                sheets.Append(sheet);
+                    // If Columns appended to worksheet after sheetdata Excel will throw an error.
+                    SheetData sd = brandWorkSheet.Elements<SheetData>().FirstOrDefault();
+                    
+                }
 
-                spreadsheetDocument.WorkbookPart.Workbook.Save();
 
-                // Close the document.
-                spreadsheetDocument.Close();
             }
+            spreadsheetDocument.Close();
+        }
+
+        public static void CreateExcelSheet(string brand, List<ExcelProduct> excelProducts)
+        {
+            
+
+            DataTable dtCodes = new DataTable();
+            dtCodes.Clear();
+
+            foreach (SpecificationAttribute specificationAttribute in SpecificationAttributeOptionUtil.specificationAttributes)
+            {
+                
+                dtCodes.Columns.Add(specificationAttribute.Name);
+            }
+
+            foreach(ExcelProduct excelProduct in excelProducts)
+            {
+                DataRow dr = dtCodes.NewRow();
+                foreach(SpecificationAttribute specificationAttribute in SpecificationAttributeOptionUtil.specificationAttributes)
+                {
+                    dr[specificationAttribute.Name] = ExcelProductUtil.FindSpecificationAttributeValue(specificationAttribute.Name, excelProduct);
+                }
+                dtCodes.Rows.Add(dr);
+            }
+
+            FileInfo file = new FileInfo(GenerateExcelFileName());
+            if(file.Exists) { 
+                ExcelPackage pck = new ExcelPackage(file);
+                ExcelWorksheet ws = null;
+                ws = pck.Workbook.Worksheets.Add(brand);
+                ws.Cells["A1"].LoadFromDataTable(dtCodes, true);
+                ws.Row(1).Style.Font.Bold = true;
+                ws.Row(1).Style.Fill.PatternType = ExcelFillStyle.Solid;
+                ws.Row(1).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);                
+                pck.Save();
+            }else
+            {
+                ExcelPackage pck = new ExcelPackage();
+                ExcelWorksheet ws = null;
+                ws = pck.Workbook.Worksheets.Add(brand);
+                ws.Cells["A1"].LoadFromDataTable(dtCodes, true);
+                ws.Row(1).Style.Font.Bold = true;
+                ws.Row(1).Style.Fill.PatternType = ExcelFillStyle.Solid;
+                ws.Row(1).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                File.WriteAllBytes(GenerateExcelFileName(), pck.GetAsByteArray());
+            }
+
+
         }
 
         private static Cell ConstructCell(string value, CellValues dataType)

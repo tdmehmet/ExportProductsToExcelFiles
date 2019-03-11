@@ -34,13 +34,14 @@ namespace ExportProductsToExcelFiles.Services.SpecificationServices
         public void ExportProductsToExcelFilesByBrands(string brand)
         {
             List<ExcelProduct> excelProducts = new List<ExcelProduct>();
-            foreach (Product product in products)
+            List<Product> brandProducts = products.Where(p => p.ProductManufacturerMapping?.FirstOrDefault()?.Manufacturer?.Name == brand).ToList();
+            foreach (Product product in brandProducts)
             {
                 log.Info("Product " + product.Sku + "is being processed ");
                 ExcelProduct excelProduct = ExcelProductUtil.GenerateExcelProductFromProduct(product);
                 excelProducts.Add(excelProduct);
             }
-
+            _excelProductService.GenerateExcelSheetfromExcelProductsByBrand(excelProducts, brand);
         }
 
     }

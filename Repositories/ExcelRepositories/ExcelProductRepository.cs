@@ -273,18 +273,7 @@ namespace ExportProductsToExcelFiles.Repositories.ExternalRepositories
 
         public void GenerateExcelSheetfromExcelProductsByBrand(List<ExcelProduct> excelProducts, string brand)
         {
-
-
-
-            ExcelFileUtil.CreateSheetIfNotExists(brand);
-
-
-            foreach (ExcelProduct excelProduct in excelProducts)
-            {
-
-            }
-           
-
+            ExcelFileUtil.CreateExcelSheet(brand, excelProducts);
         }
     }
 }

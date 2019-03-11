@@ -83,6 +83,10 @@ namespace ExportProductsToExcelFiles.Utils
                 specificationAttributeOption = specificationAttributeOptions
                     .Where(saop => saop.SpecificationAttributeId == specificationAttribute.Id &&
                     saop.Id == productSpecificationAttributeMapping.SpecificationAttributeOptionId).FirstOrDefault();
+                if(specificationAttributeOption != null)
+                {
+                    break;
+                }
             }
 
             

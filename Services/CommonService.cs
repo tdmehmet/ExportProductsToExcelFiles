@@ -75,48 +75,19 @@ namespace ExportProductsToExcelFiles.Services
         public void ExportProductsToExcelFilesByBrands(AppConfiguration appConfiguration)
         {
             string[] brands = appConfiguration.Brands.Split(";");
-            foreach(string brand in brands) {
+            log.Info("Getting List of Products for Brand  from Nop DB");
+            GenericService.products = _productService.FindAllProducts();
+            log.Info("List of Products from Nop DB are Gathered");
+            log.Info("Getting List of Specification Attribute Values from Nop DB");
+            SpecificationAttributeOptionUtil.specificationAttributes = _specificationAttributeService.FindAllSpecificationAttributes();
+            log.Info("List of Specification Attributes from Nop DB are Gathered");
 
-                log.Info("Getting List of Specification Attribute Values from Nop DB");
-                SpecificationAttributeOptionUtil.specificationAttributes = _specificationAttributeService.FindAllSpecificationAttributes();
-                log.Info("List of Specification Attributes from Nop DB are Gathered");
-                log.Info("Creating Excel File if Not Exists");
-                ExcelFileUtil.CreateSpreadSheetDocument(brand);
-                log.Info("Created Excel File if Not Exists");
-                _excelProductRepository.GenerateExcelSheetfromExcelProductsByBrand(new List<ExcelProduct>(), brand);
+            log.Info("Getting List of Specification Attribute Option Values from Nop DB");
+            SpecificationAttributeOptionUtil.specificationAttributeOptions = _specificationAttributeOptionService.FindAllSpecificationAttributeOptions();
+            log.Info("List of Specification Attribute Options from Nop DB are Gathered");
 
-                log.Info("Getting List of Products for Brand " + brand + " from Nop DB");
-                GenericService.products = _productService.FindProductsByBrand(brand);
-                log.Info("List of Products from Nop DB are Gathered");
 
-                log.Info("Getting List of Products from Nop DB");
-                GenericService.pictures = _pictureService.FindAllPictures();
-                log.Info("List of Products from Nop DB are Gathered");
-
-                log.Info("Getting List of Manufacturers from Nop DB");
-                GenericService.manufacturers = _manufacturerService.FindAllManufacturers();
-                log.Info("List of Manufacturers from Nop DB are Gathered");
-
-                log.Info("Getting List of ProductManufacturerMappings from Nop DB");
-                GenericService.productManufacturerMappings =
-                     _productManufacturerMappingService.FindAllProductManufacturerMappings();
-                log.Info("List of ProductManufacturerMappings from Nop DB are Gathered");
-
-                log.Info("Getting List of Categories from Nop DB");
-                GenericService.categories = _categoryService.FindAllCategories();
-                log.Info("List of Categories from Nop DB are Gathered");
-
-                log.Info("Getting List of ProductCategoryMappings from Nop DB");
-                GenericService.productCategoryMappings = _productCategoryMappingService.FindAllProductCategoryMappings();
-                log.Info("List of ProductCategoryMappings from Nop DB are Gathered");
-
-                log.Info("Getting List of Specification Attribute Values from Nop DB");
-                SpecificationAttributeOptionUtil.specificationAttributes = _specificationAttributeService.FindAllSpecificationAttributes();
-                log.Info("List of Specification Attributes from Nop DB are Gathered");
-
-                log.Info("Getting List of Specification Attribute Option Values from Nop DB");
-                SpecificationAttributeOptionUtil.specificationAttributeOptions = _specificationAttributeOptionService.FindAllSpecificationAttributeOptions();
-                log.Info("List of Specification Attribute Options from Nop DB are Gathered");
+            foreach (string brand in brands) {
 
                 
 

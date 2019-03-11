@@ -8,6 +8,7 @@ namespace ExportProductsToExcelFiles.Utils
 {
     public static class ExcelProductUtil
     {
+        public static List<Product> products;
         public static List<SpecificationAttributeOptionCustomValueMap> GenerateAllSpecificationAttributeOptionListForExcelProduct(ExcelProduct excelProduct)
         {
             List<SpecificationAttributeOptionCustomValueMap> specificationAttributeOptionCustomValueMapList = new List<SpecificationAttributeOptionCustomValueMap>
@@ -186,6 +187,8 @@ namespace ExportProductsToExcelFiles.Utils
                 SpecificationAttributeOptionUtil.FindSpecificationAttributeOptionWithCustomValue("Watch Band Closure"                  ,excelProduct.WatchBandClosure                   ),
                 SpecificationAttributeOptionUtil.FindSpecificationAttributeOptionWithCustomValue("Interchangeable Dial/Face"           ,excelProduct.InterchangeableDialFace            ),
                 SpecificationAttributeOptionUtil.FindSpecificationAttributeOptionWithCustomValue("Interchangeable Strap"               ,excelProduct.InterchangeableStrap               ),
+                
+
             };
 
             return specificationAttributeOptionCustomValueMapList;
@@ -194,7 +197,10 @@ namespace ExportProductsToExcelFiles.Utils
         public static ExcelProduct GenerateExcelProductFromProduct(Product product)
         {
             ExcelProduct excelProduct = new ExcelProduct();
-
+            if(product.Sku == "PRL19247040203")
+            {
+                string sku = "PRL19247040203";
+            }
             excelProduct.GTIN = product.Gtin;
             excelProduct.ProductTitle = product.Name;
             excelProduct.PartnerSKUUnique = product.Sku;
@@ -203,6 +209,30 @@ namespace ExportProductsToExcelFiles.Utils
             excelProduct.FeatureBullet3 = product.BulletPoint3;
             excelProduct.FeatureBullet4 = product.BulletPoint4;
             excelProduct.FeatureBullet5 = product.BulletPoint5;
+
+            for (int i = 1; i < product.ProductPictureMapping.Count; i++)
+            {
+                if(i == 1)
+                {
+                    excelProduct.ImageURL1 = product.ProductPictureMapping.ToArray()[i].Picture.SeoFilename;
+                }
+                if (i == 2)
+                {
+                    excelProduct.ImageURL2 = product.ProductPictureMapping.ToArray()[i].Picture.SeoFilename;
+                }
+                if (i == 3)
+                {
+                    excelProduct.ImageURL3 = product.ProductPictureMapping.ToArray()[i].Picture.SeoFilename;
+                }
+                if (i == 4)
+                {
+                    excelProduct.ImageURL4 = product.ProductPictureMapping.ToArray()[i].Picture.SeoFilename;
+                }
+                if (i == 5)
+                {
+                    excelProduct.ImageURL5 = product.ProductPictureMapping.ToArray()[i].Picture.SeoFilename;
+                }
+            }
             excelProduct.BrandName = product.ProductManufacturerMapping.FirstOrDefault().Manufacturer.Name;
             excelProduct.SeasonCode = SpecificationAttributeOptionUtil.FindSpecificationAttributeOptionOfProductBySpecificationAttribute("Season Code", product.ProductSpecificationAttributeMapping.ToList());
             excelProduct.Year = SpecificationAttributeOptionUtil.FindSpecificationAttributeOptionOfProductBySpecificationAttribute("Year", product.ProductSpecificationAttributeMapping.ToList());
@@ -379,6 +409,207 @@ namespace ExportProductsToExcelFiles.Utils
             excelProduct.InterchangeableStrap = SpecificationAttributeOptionUtil.FindSpecificationAttributeOptionOfProductBySpecificationAttribute("Interchangeable Strap", product.ProductSpecificationAttributeMapping.ToList());
 
             return excelProduct;
+        }
+
+
+        public static string FindSpecificationAttributeValue(string specificationAttributeName, ExcelProduct excelProduct)
+        {
+            if (specificationAttributeName == "Season Code") return excelProduct.SeasonCode;
+            if (specificationAttributeName == "Year") return excelProduct.Year;
+            if (specificationAttributeName == "Style or Part Number") return excelProduct.StyleorPartNumber;
+            if (specificationAttributeName == "Brand Name") return excelProduct.BrandName;
+            if (specificationAttributeName == "Department") return excelProduct.Department;
+            if (specificationAttributeName == "Product Type") return excelProduct.ProductType;
+            if (specificationAttributeName == "Product Subtype") return excelProduct.ProductSubtype;
+            if (specificationAttributeName == "Sport Type") return excelProduct.SportType;
+            if (specificationAttributeName == "Country of Origin") return excelProduct.CountryofOrigin;
+            if (specificationAttributeName == "Style or Part Name") return excelProduct.StyleorPartName;
+            if (specificationAttributeName == "Colour Name") return excelProduct.ColourName;
+            if (specificationAttributeName == "Colour Family") return excelProduct.ColourFamily;
+            if (specificationAttributeName == "Size") return excelProduct.Size;
+            if (specificationAttributeName == "Sizing Standard") return excelProduct.SizingStandard;
+            if (specificationAttributeName == "Target Age Range") return excelProduct.TargetAgeRange;
+            if (specificationAttributeName == "Special Size Type") return excelProduct.SpecialSizeType;
+            if (specificationAttributeName == "Material") return excelProduct.Material;
+            if (specificationAttributeName == "Lining Material") return excelProduct.LiningMaterial;
+            if (specificationAttributeName == "Neckline") return excelProduct.Neckline;
+            if (specificationAttributeName == "Sleeve Type") return excelProduct.SleeveType;
+            if (specificationAttributeName == "Fit") return excelProduct.Fit;
+            if (specificationAttributeName == "Occasion") return excelProduct.Occasion;
+            if (specificationAttributeName == "Skirt/Dress Length") return excelProduct.SkirtDressLength;
+            if (specificationAttributeName == "Waist Type") return excelProduct.WaistType;
+            if (specificationAttributeName == "Bra Support") return excelProduct.BraSupport;
+            if (specificationAttributeName == "Care Instructions") return excelProduct.CareInstructions;
+            if (specificationAttributeName == "Attribute Key 1") return excelProduct.AttributeKey1;
+            if (specificationAttributeName == "Attribute Value 1") return excelProduct.AttributeValue1;
+            if (specificationAttributeName == "Attribute Key 2") return excelProduct.AttributeKey2;
+            if (specificationAttributeName == "Attribute Value 2") return excelProduct.AttributeValue2;
+            if (specificationAttributeName == "Attribute Key 3") return excelProduct.AttributeKey3;
+            if (specificationAttributeName == "Attribute Value 3") return excelProduct.AttributeValue3;
+            if (specificationAttributeName == "Attribute Key 4") return excelProduct.AttributeKey4;
+            if (specificationAttributeName == "Attribute Value 4") return excelProduct.AttributeValue4;
+            if (specificationAttributeName == "Attribute Key 5") return excelProduct.AttributeKey5;
+            if (specificationAttributeName == "Attribute Value 5") return excelProduct.AttributeValue5;
+            if (specificationAttributeName == "Shipping Length (cm)") return excelProduct.ShippingLengthcm;
+            if (specificationAttributeName == "Shipping Height (cm)") return excelProduct.ShippingHeightcm;
+            if (specificationAttributeName == "Shipping Width/Depth (cm)") return excelProduct.ShippingWidthDepthcm;
+            if (specificationAttributeName == "Shipping Weight (KG)") return excelProduct.ShippingWeightKG;
+            if (specificationAttributeName == "Shipping Destination") return excelProduct.ShippingDestination;
+            if (specificationAttributeName == "Quantity/Stock") return excelProduct.QuantityStock;
+            if (specificationAttributeName == "Fulfilment Method") return excelProduct.FulfilmentMethod;
+            if (specificationAttributeName == "Processing Time") return excelProduct.ProcessingTime;
+            if (specificationAttributeName == "MSRP AE") return excelProduct.MSRPAE;
+            if (specificationAttributeName == "MSRP SA") return excelProduct.MSRPSA;
+            if (specificationAttributeName == "MSRP EG") return excelProduct.MSRPEG;
+            if (specificationAttributeName == "Cost (AED)") return excelProduct.CostAED;
+            if (specificationAttributeName == "Selling Price (AED)") return excelProduct.SellingPriceAED;
+            if (specificationAttributeName == "Selling Price (SAR)") return excelProduct.SellingPriceSAR;
+            if (specificationAttributeName == "Selling Price (EGP)") return excelProduct.SellingPriceEGP;
+            if (specificationAttributeName == "Promotional Price (AED)") return excelProduct.PromotionalPriceAED;
+            if (specificationAttributeName == "Promotional Price (SAR)") return excelProduct.PromotionalPriceSAR;
+            if (specificationAttributeName == "Promotional Price (EGP)") return excelProduct.PromotionalPriceEGP;
+            if (specificationAttributeName == "HS Code") return excelProduct.HSCode;
+            if (specificationAttributeName == "Model Number") return excelProduct.ModelNumber;
+            if (specificationAttributeName == "Model Name") return excelProduct.ModelName;
+            if (specificationAttributeName == "Product Length") return excelProduct.ProductLength;
+            if (specificationAttributeName == "Length Unit") return excelProduct.LengthUnit;
+            if (specificationAttributeName == "Product Height") return excelProduct.ProductHeight;
+            if (specificationAttributeName == "Height Unit") return excelProduct.HeightUnit;
+            if (specificationAttributeName == "Product Width/Depth") return excelProduct.ProductWidthDepth;
+            if (specificationAttributeName == "Width/Depth Unit") return excelProduct.WidthDepthUnit;
+            if (specificationAttributeName == "Product Weight") return excelProduct.ProductWeight;
+            if (specificationAttributeName == "Weight Unit") return excelProduct.WeightUnit;
+            if (specificationAttributeName == "Capacity") return excelProduct.Capacity;
+            if (specificationAttributeName == "Capacity Unit") return excelProduct.CapacityUnit;
+            if (specificationAttributeName == "Number of Pieces") return excelProduct.NumberofPieces;
+            if (specificationAttributeName == "Size Unit") return excelProduct.SizeUnit;
+            if (specificationAttributeName == "Exterior Material") return excelProduct.ExteriorMaterial;
+            if (specificationAttributeName == "Interior Material") return excelProduct.InteriorMaterial;
+            if (specificationAttributeName == "Strap Material") return excelProduct.StrapMaterial;
+            if (specificationAttributeName == "Compatible With") return excelProduct.CompatibleWith;
+            if (specificationAttributeName == "Base Material") return excelProduct.BaseMaterial;
+            if (specificationAttributeName == "Secondary Material") return excelProduct.SecondaryMaterial;
+            if (specificationAttributeName == "Material Finish") return excelProduct.MaterialFinish;
+            if (specificationAttributeName == "Types of Shower Head") return excelProduct.TypesofShowerHead;
+            if (specificationAttributeName == "Types of Dispenser") return excelProduct.TypesofDispenser;
+            if (specificationAttributeName == "Number of Spray Settings") return excelProduct.NumberofSpraySettings;
+            if (specificationAttributeName == "Assembly Required") return excelProduct.AssemblyRequired;
+            if (specificationAttributeName == "Set Includes") return excelProduct.SetIncludes;
+            if (specificationAttributeName == "Filling Material") return excelProduct.FillingMaterial;
+            if (specificationAttributeName == "Comfort Level") return excelProduct.ComfortLevel;
+            if (specificationAttributeName == "Sheet Type") return excelProduct.SheetType;
+            if (specificationAttributeName == "Pack Size") return excelProduct.PackSize;
+            if (specificationAttributeName == "Formation") return excelProduct.Formation;
+            if (specificationAttributeName == "Target Use/Application") return excelProduct.TargetUseApplication;
+            if (specificationAttributeName == "Target Skin Type") return excelProduct.TargetSkinType;
+            if (specificationAttributeName == "UV Protection") return excelProduct.UVProtection;
+            if (specificationAttributeName == "Battery Size") return excelProduct.BatterySize;
+            if (specificationAttributeName == "Battery Size Unit") return excelProduct.BatterySizeUnit;
+            if (specificationAttributeName == "Brand Compatibility") return excelProduct.BrandCompatibility;
+            if (specificationAttributeName == "Connection Type") return excelProduct.ConnectionType;
+            if (specificationAttributeName == "Case Type") return excelProduct.CaseType;
+            if (specificationAttributeName == "Charging Type") return excelProduct.ChargingType;
+            if (specificationAttributeName == "Phone Case Material") return excelProduct.PhoneCaseMaterial;
+            if (specificationAttributeName == "Audio Headphone Type") return excelProduct.AudioHeadphoneType;
+            if (specificationAttributeName == "Warranty Years") return excelProduct.WarrantyYears;
+            if (specificationAttributeName == "Frame Colour") return excelProduct.FrameColour;
+            if (specificationAttributeName == "Frame Colour Family") return excelProduct.FrameColourFamily;
+            if (specificationAttributeName == "Lens Colour") return excelProduct.LensColour;
+            if (specificationAttributeName == "Lens Colour Family") return excelProduct.LensColourFamily;
+            if (specificationAttributeName == "Frame Shape/Style") return excelProduct.FrameShapeStyle;
+            if (specificationAttributeName == "Lens Focal Type") return excelProduct.LensFocalType;
+            if (specificationAttributeName == "Lens Magnification") return excelProduct.LensMagnification;
+            if (specificationAttributeName == "Lens Type") return excelProduct.LensType;
+            if (specificationAttributeName == "Width Profile") return excelProduct.WidthProfile;
+            if (specificationAttributeName == "Upper Material") return excelProduct.UpperMaterial;
+            if (specificationAttributeName == "Sole Material") return excelProduct.SoleMaterial;
+            if (specificationAttributeName == "Heel Type") return excelProduct.HeelType;
+            if (specificationAttributeName == "Heel Profile") return excelProduct.HeelProfile;
+            if (specificationAttributeName == "Heel Height") return excelProduct.HeelHeight;
+            if (specificationAttributeName == "Heel Height Unit") return excelProduct.HeelHeightUnit;
+            if (specificationAttributeName == "Boot Shaft Height") return excelProduct.BootShaftHeight;
+            if (specificationAttributeName == "Boot Shaft Height Unit") return excelProduct.BootShaftHeightUnit;
+            if (specificationAttributeName == "Boot Circumference") return excelProduct.BootCircumference;
+            if (specificationAttributeName == "Boot Circumference Unit") return excelProduct.BootCircumferenceUnit;
+            if (specificationAttributeName == "Closure/Fastener") return excelProduct.ClosureFastener;
+            if (specificationAttributeName == "Wardrobe Design") return excelProduct.WardrobeDesign;
+            if (specificationAttributeName == "Upholstery Type") return excelProduct.UpholsteryType;
+            if (specificationAttributeName == "Seat Filling") return excelProduct.SeatFilling;
+            if (specificationAttributeName == "Seat Cushion") return excelProduct.SeatCushion;
+            if (specificationAttributeName == "Wood Type") return excelProduct.WoodType;
+            if (specificationAttributeName == "Wood Tone") return excelProduct.WoodTone;
+            if (specificationAttributeName == "Shape") return excelProduct.Shape;
+            if (specificationAttributeName == "Number of Drawers") return excelProduct.NumberofDrawers;
+            if (specificationAttributeName == "Number of Doors") return excelProduct.NumberofDoors;
+            if (specificationAttributeName == "Number of Shelves") return excelProduct.NumberofShelves;
+            if (specificationAttributeName == "Number of Seats") return excelProduct.NumberofSeats;
+            if (specificationAttributeName == "Number of Panels") return excelProduct.NumberofPanels;
+            if (specificationAttributeName == "Installation") return excelProduct.Installation;
+            if (specificationAttributeName == "Energy Used") return excelProduct.EnergyUsed;
+            if (specificationAttributeName == "Additional Feature 1") return excelProduct.AdditionalFeature1;
+            if (specificationAttributeName == "Additional Feature 2") return excelProduct.AdditionalFeature2;
+            if (specificationAttributeName == "Additional Feature 3") return excelProduct.AdditionalFeature3;
+            if (specificationAttributeName == "Pattern") return excelProduct.Pattern;
+            if (specificationAttributeName == "Mats, Rugs & Carpet Design") return excelProduct.MatsRugsCarpetDesign;
+            if (specificationAttributeName == "Technique") return excelProduct.Technique;
+            if (specificationAttributeName == "Style of Curtain Lining") return excelProduct.StyleofCurtainLining;
+            if (specificationAttributeName == "Dispenser Type") return excelProduct.DispenserType;
+            if (specificationAttributeName == "Scents/Notes") return excelProduct.ScentsNotes;
+            if (specificationAttributeName == "Aromatherapy Type") return excelProduct.AromatherapyType;
+            if (specificationAttributeName == "Fine/Luxury Material") return excelProduct.FineLuxuryMaterial;
+            if (specificationAttributeName == "Base Material Type") return excelProduct.BaseMaterialType;
+            if (specificationAttributeName == "Stone/Gem") return excelProduct.StoneGem;
+            if (specificationAttributeName == "Carat Weight") return excelProduct.CaratWeight;
+            if (specificationAttributeName == "Closure/Fastening") return excelProduct.ClosureFastening;
+            if (specificationAttributeName == "Product Features 1") return excelProduct.ProductFeatures1;
+            if (specificationAttributeName == "Product Features 2") return excelProduct.ProductFeatures2;
+            if (specificationAttributeName == "Product Features 3") return excelProduct.ProductFeatures3;
+            if (specificationAttributeName == "Product Features 4") return excelProduct.ProductFeatures4;
+            if (specificationAttributeName == "Product Features 5") return excelProduct.ProductFeatures5;
+            if (specificationAttributeName == "Ink Colour Family") return excelProduct.InkColourFamily;
+            if (specificationAttributeName == "Pen Material") return excelProduct.PenMaterial;
+            if (specificationAttributeName == "Point or Nib Type") return excelProduct.PointorNibType;
+            if (specificationAttributeName == "Point Size") return excelProduct.PointSize;
+            if (specificationAttributeName == "Point Size Unit") return excelProduct.PointSizeUnit;
+            if (specificationAttributeName == "Refillable") return excelProduct.Refillable;
+            if (specificationAttributeName == "Watch Band Colour") return excelProduct.WatchBandColour;
+            if (specificationAttributeName == "Watch Band Colour Family") return excelProduct.WatchBandColourFamily;
+            if (specificationAttributeName == "Band Length") return excelProduct.BandLength;
+            if (specificationAttributeName == "Band Length Unit") return excelProduct.BandLengthUnit;
+            if (specificationAttributeName == "Watch Band Material") return excelProduct.WatchBandMaterial;
+            if (specificationAttributeName == "Watch Dial/Face Type") return excelProduct.WatchDialFaceType;
+            if (specificationAttributeName == "Dial/Face Diameter") return excelProduct.DialFaceDiameter;
+            if (specificationAttributeName == "Dial/Face Diameter Unit") return excelProduct.DialFaceDiameterUnit;
+            if (specificationAttributeName == "Watch Dial/Face Colour") return excelProduct.WatchDialFaceColour;
+            if (specificationAttributeName == "Watch Dial/Face Colour Family") return excelProduct.WatchDialFaceColourFamily;
+            if (specificationAttributeName == "Watch Movement") return excelProduct.WatchMovement;
+            if (specificationAttributeName == "Watch Case Shape") return excelProduct.WatchCaseShape;
+            if (specificationAttributeName == "Watch Band Closure") return excelProduct.WatchBandClosure;
+            if (specificationAttributeName == "Interchangeable Dial/Face") return excelProduct.InterchangeableDialFace;
+            if (specificationAttributeName == "Interchangeable Strap") return excelProduct.InterchangeableStrap;
+
+            if (specificationAttributeName == "GTIN") return excelProduct.GTIN;
+            if (specificationAttributeName == "Product Title") return excelProduct.ProductTitle;
+            if (specificationAttributeName == "Partner SKU Unique") return excelProduct.PartnerSKUUnique;
+            if (specificationAttributeName == "Feature/Bullet 1") return excelProduct.FeatureBullet1;
+            if (specificationAttributeName == "Feature/Bullet 2") return excelProduct.FeatureBullet2;
+            if (specificationAttributeName == "Feature/Bullet 3") return excelProduct.FeatureBullet3;
+            if (specificationAttributeName == "Feature/Bullet 4") return excelProduct.FeatureBullet4;
+            if (specificationAttributeName == "Feature/Bullet 5") return excelProduct.FeatureBullet5;
+            if (specificationAttributeName == "Brand Name") return excelProduct.BrandName;
+            if (specificationAttributeName == "Image URL 1") return excelProduct.ImageURL1;
+            if (specificationAttributeName == "Image URL 2") return excelProduct.ImageURL2;
+            if (specificationAttributeName == "Image URL 3") return excelProduct.ImageURL3;
+            if (specificationAttributeName == "Image URL 4") return excelProduct.ImageURL4;
+            if (specificationAttributeName == "Image URL 5") return excelProduct.ImageURL5;
+            return "";
+            
+            
+            
+            
+            
+            
+
         }
     }
 }

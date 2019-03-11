@@ -69,7 +69,7 @@ namespace ExportProductsToExcelFiles.Services.BiggBrands
 
         public List<Product> FindProductsByBrand(string brand)
         {
-            return _productRepository.FindAllProducts().Where(p => p.ProductManufacturerMapping.FirstOrDefault().Manufacturer.Name == brand).ToList();
+            return _productRepository.FindAllProducts().Where(p => p.ProductManufacturerMapping?.FirstOrDefault()?.Manufacturer.Name.ToUpper() == brand.ToUpper()).ToList();
         }
     }
 }
